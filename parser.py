@@ -10,7 +10,8 @@ def load_clinvar(data_folder):
     dat = pandas.read_csv(infile,sep="\t",squeeze=True,quoting=csv.QUOTE_NONE).to_dict(orient='records')
     results = {}
     for rec in dat:
-        _id = hashlib.sha224(rec["release"] + "_" + str(rec["chromosome"]) + "_" + str(rec["start"]) + "_" + rec["reference"] + "_" + rec["alternative"]).hexdigest()       
+        var = rec["release"] + "_" + str(rec["chromosome"]) + "_" + str(rec["start"]) + "_" + rec["reference"] + "_" + rec["alternative"]
+        _id = hashlib.sha224(var.encode('ascii')).hexdigest()       
         process_key = lambda k: k.replace(" ","_").lower()
         rec = dict_convert(rec,keyfn=process_key)
         rec = dict_sweep(rec,vals=[np.nan])
